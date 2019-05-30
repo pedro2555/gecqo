@@ -1,0 +1,3 @@
+[MESSAGES CONTROL]
+disable=C0103
+# C0103: Constant name doesn't conform to UPPER_CASE naming style (invalid-name)

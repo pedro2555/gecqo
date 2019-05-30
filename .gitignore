@@ -1,0 +1,8 @@
+# virtualenv
+venv/
+
+# test artifacts
+.coverage
+
+# python artifacts
+__pycache__/
