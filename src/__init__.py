@@ -22,8 +22,22 @@ Main project package.
 
 """
 import os
+from dotenv import load_dotenv
 from celery import Celery
+from .mail import SMTP
 
-celery = Celery(__name__,
-                broker=os.environ.get('REDIS_URL', 'redis://'))
+# loads a file name .env into environment
+load_dotenv()
+
+celery = Celery(
+    __name__,
+    broker=os.getenv('REDIS_URL', 'redis://'))
 celery.config_from_object('celeryconfig')
+
+mail = SMTP(
+    hostname=os.getenv('MAIL_HOST'),
+    port=    os.getenv('MAIL_PORT'),
+    username=os.getenv('MAIL_USER'),
+    password=os.getenv('MAIL_PASS'),
+    ssl=     os.getenv('MAIL_SSL', False),
+    tls=     os.getenv('MAIL_TLS', False))

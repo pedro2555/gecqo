@@ -23,4 +23,4 @@ Module used to start a new worker.
 """
 from src import celery
 
-# import tasks here
+from src.tasks import *
