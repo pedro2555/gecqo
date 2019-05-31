@@ -22,9 +22,8 @@ Module containing a wrapper around the smtplib.
 
 """
 import smtplib
-from email.message import EmailMessage as Message
 
-class SMTP(object):
+class SMTP():
     """Wrapper context manager class for the smtplib SMTP mailer.
 
     """
@@ -35,6 +34,7 @@ class SMTP(object):
         self._password = password
         self._ssl = ssl
         self._tls = tls
+        self._conn = None
 
     def connect(self):
         """Opens a connection to the server.
@@ -64,5 +64,5 @@ class SMTP(object):
         self.connect()
         return self
 
-    def __exit__(self, type, value, traceback):
+    def __exit__(self, *_):
         self.close()

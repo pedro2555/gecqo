@@ -22,13 +22,14 @@ Module to alert me on temps for metars.
 
 """
 import logging
-import requests
-import smtplib
 from email.message import EmailMessage
+import requests
 from .. import celery, mail
 
 @celery.task()
 def negative_temp_metar():
+    """Dispatches an email every time a metar with negative temperature or dew point is found.
+    """
     airports = ['LPPT', 'LPPR', 'LPFR', 'LPMA']
     alert = []
 
@@ -40,7 +41,8 @@ def negative_temp_metar():
         dwpt = int(metar['Dewpoint'].replace('M', '-'))
 
         if (temp < 0 or dwpt < 0):
-            logging.info(metar['raw'])
+            return metar['raw']
+        return None
 
     for airport in airports:
         metar = get_metar_with_negative_temp(airport)
@@ -55,5 +57,7 @@ def negative_temp_metar():
         msg['From'] = 'gecqo@gmail.com'
         msg['To'] = 'prodrigues1990@gmail.com'
 
-    with mail:
-        mail.send_message(msg)
+        with mail:
+            mail.send_message(msg)
+
+        logging.info(msg['Subject'])

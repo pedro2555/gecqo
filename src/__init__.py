@@ -31,13 +31,13 @@ load_dotenv()
 
 celery = Celery(
     __name__,
-    broker=os.getenv('REDIS_URL', 'redis://'))
+    broker=os.environ.get('REDIS_URL', 'redis://'))
 celery.config_from_object('celeryconfig')
 
 mail = SMTP(
-    hostname=os.getenv('MAIL_HOST'),
-    port=    os.getenv('MAIL_PORT'),
-    username=os.getenv('MAIL_USER'),
-    password=os.getenv('MAIL_PASS'),
-    ssl=     os.getenv('MAIL_SSL', False),
-    tls=     os.getenv('MAIL_TLS', False))
+    hostname=os.environ.get('MAIL_HOST'),
+    port=os.environ.get('MAIL_PORT'),
+    username=os.environ.get('MAIL_USER'),
+    password=os.environ.get('MAIL_PASS'),
+    ssl=os.environ.get('MAIL_SSL', False),
+    tls=os.environ.get('MAIL_TLS', False))
