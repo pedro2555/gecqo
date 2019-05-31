@@ -28,5 +28,5 @@ from src.tasks import *
 sched = scheduler = BlockingScheduler()
 
 @sched.scheduled_job('cron', minute='*/30')
-def update_events():
-    negative_temp_metar.apply_async()
+def metaralert():
+    metaralert.apply_async()

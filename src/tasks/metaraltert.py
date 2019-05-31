@@ -27,37 +27,40 @@ import requests
 from .. import celery, mail
 
 @celery.task()
-def negative_temp_metar():
+def metaralert():
     """Dispatches an email every time a metar with negative temperature or dew point is found.
     """
     airports = ['LPPT', 'LPPR', 'LPFR', 'LPMA']
-    alert = []
+    alerts = []
 
     def get_metar_with_negative_temp(airport):
         resp = requests.get('/'.join(['https://avwx.rest/api/metar', airport]))
         metar = resp.json()
 
-        temp = int(metar['Temperature'].replace('M', '-'))
-        dwpt = int(metar['Dewpoint'].replace('M', '-'))
+        temp = metar['temperature']['value']
+        dwpt = metar['dewpoint']['value']
+
+        logging.info(metar['raw'])
 
         if (temp < 0 or dwpt < 0):
-            return metar['raw']
+            return metar
+
         return None
 
     for airport in airports:
         metar = get_metar_with_negative_temp(airport)
         if metar:
-            alert.append(metar)
+            alerts.append(metar)
 
-    if alert:
+    if alerts:
         msg = EmailMessage()
-        alert_airports = ', '.join(alert)
+        alert_airports = ', '.join([alert['station'] for alert in alerts])
 
+        body = '\r\n'.join([alert['raw'] for alert in alerts])
         msg['Subject'] = f'{alert_airports} with negative temperature.'
-        msg['From'] = 'gecqo@gmail.com'
+        msg.set_content(body)
+        msg['From'] = 'gecqo.lizard@gmail.com'
         msg['To'] = 'prodrigues1990@gmail.com'
 
         with mail:
             mail.send_message(msg)
-
-        logging.info(msg['Subject'])

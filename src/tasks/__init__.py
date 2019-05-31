@@ -21,4 +21,4 @@ along with gecqo.  If not, see <http://www.gnu.org/licenses/>.
 Package containing task declarations.
 
 """
-from .metaraltert import negative_temp_metar
+from .metaraltert import metaralert

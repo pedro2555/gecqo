@@ -21,6 +21,7 @@ along with gecqo.  If not, see <http://www.gnu.org/licenses/>.
 Module containing a wrapper around the smtplib.
 
 """
+import logging
 import smtplib
 
 class SMTP():
@@ -58,6 +59,7 @@ class SMTP():
         Args:
             message (EmailMessage): the message to be sent.
         """
+        logging.info(f"notifying {message['To']}")
         self._conn.send_message(message)
 
     def __enter__(self):
