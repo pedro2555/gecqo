@@ -28,5 +28,5 @@ from src.tasks import *
 sched = scheduler = BlockingScheduler()
 
 @sched.scheduled_job('cron', minute='*/30')
-def metaralert():
+def metaralert_task():
     metaralert.apply_async()
