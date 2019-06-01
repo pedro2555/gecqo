@@ -23,10 +23,10 @@ Module used to schedule tasks.
 """
 from apscheduler.schedulers.blocking import BlockingScheduler
 
-from src.tasks import *
+from src import tasks
 
 sched = scheduler = BlockingScheduler()
 
 @sched.scheduled_job('cron', minute='*/30')
-def metaralert_task():
-    metaralert.apply_async()
+def metaraler():
+    tasks.metaralert.apply_async()
