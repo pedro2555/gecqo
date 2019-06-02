@@ -24,3 +24,5 @@ Module used to start a new worker.
 from src import celery
 
 from src.tasks import *
+
+celery.task(tasks.metaralert)
