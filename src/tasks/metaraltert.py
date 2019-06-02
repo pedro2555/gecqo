@@ -24,9 +24,8 @@ Module to alert me on temps for metars.
 import logging
 from email.message import EmailMessage
 import requests
-from .. import celery, mail
+from .. import mail
 
-@celery.task()
 def metaralert():
     """Dispatches an email every time a metar with negative temperature or dew point is found.
     """
@@ -37,8 +36,11 @@ def metaralert():
         resp = requests.get('/'.join(['https://avwx.rest/api/metar', airport]))
         metar = resp.json()
 
-        temp = metar['temperature']['value']
-        dwpt = metar['dewpoint']['value']
+        try:
+            temp = metar['temperature']['value']
+            dwpt = metar['dewpoint']['value']
+        except KeyError:
+            logging.info(metar)
 
         logging.info(metar['raw'])
 

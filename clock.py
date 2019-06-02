@@ -24,9 +24,11 @@ Module used to schedule tasks.
 from apscheduler.schedulers.blocking import BlockingScheduler
 
 from src import tasks
+from src import celery
 
 sched = scheduler = BlockingScheduler()
 
 @sched.scheduled_job('cron', minute='*/30')
-def metaraler():
-    tasks.metaralert.apply_async()
+def metaralert():
+    task = celery.task(tasks.metaralert)
+    task.apply_async()
